@@ -31,7 +31,8 @@ const emailService = new EmailService();
 const app = express();
 const allowedOrigins = [
   'https://we-can-trust-mercy-trusts-projects.vercel.app',
-  'https://www.we-can-trust.org'
+  'https://www.we-can-trust.org',
+  'http://localhost:5173',
 ];
 
 const corsOptions = {
@@ -416,7 +417,6 @@ app.get("/api/receipts/download/:receiptNumber", async (req, res) => {
     const donation = await Donation.findOne({ 
       receiptNumber, 
       status: "completed",
-      receiptGenerated: true 
     });
     
     if (!donation) {
@@ -427,21 +427,21 @@ app.get("/api/receipts/download/:receiptNumber", async (req, res) => {
     }
     
     // Check if file exists
-    const fs = require('fs');
-    if (!fs.existsSync(donation.receiptPath)) {
-      return res.status(404).json({
-        success: false,
-        message: "Receipt file not found"
-      });
+    const result = await receiptGenerator.generateReceipt(donation, `http://${req.get('host')}`);
+    if (!result.success) {
+      console.error("Receipt gen failed:", result.error);
+      return res.status(500).json({ success: false, message: "Failed to generate receipt" });
     }
-    
-    // Set headers for PDF download
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `attachment; filename="Receipt-${receiptNumber}.pdf"`);
-    
-    // Stream the file
-    const fileStream = fs.createReadStream(donation.receiptPath);
-    fileStream.pipe(res);
+
+    // Stream it down
+    res
+      .status(200)
+      .set({
+        'Content-Type': 'application/pdf',
+        'Content-Disposition': `attachment; filename="${result.fileName}"`,
+        'Content-Length': result.buffer.length
+      })
+      .send(result.buffer);
     
   } catch (error) {
     console.error("Error downloading receipt:", error);

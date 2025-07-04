@@ -358,14 +358,6 @@ class ReceiptGenerator {
       // Generate HTML
       const html = this.generateReceiptHTML(donation, qrCodeDataUrl, verificationHash);
       
-      // Create receipts directory if it doesn't exist
-      const receiptsDir = path.join(__dirname, '../receipts');
-      try {
-        await fs.access(receiptsDir);
-      } catch {
-        await fs.mkdir(receiptsDir, { recursive: true });
-      }
-      
       // Generate PDF using Puppeteer
       const browser = await puppeteer.launch({
         headless: 'new',
@@ -379,10 +371,8 @@ class ReceiptGenerator {
       });
       
       const fileName = `receipt-${donation.receiptNumber}.pdf`;
-      const filePath = path.join(receiptsDir, fileName);
       
-      await page.pdf({
-        path: filePath,
+      const pdfBuffer = await page.pdf({
         format: 'A4',
         printBackground: true,
         margin: {
@@ -397,7 +387,7 @@ class ReceiptGenerator {
       
       return {
         success: true,
-        filePath,
+        buffer: pdfBuffer,
         fileName,
         verificationHash,
         verificationUrl
