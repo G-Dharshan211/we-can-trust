@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { CreditCard, Heart, Users, GraduationCap, Lightbulb, Download, CheckCircle } from 'lucide-react';
 import Button from '../components/Button';
 import Card from '../components/Card';
+import PrivacyPolicyModal from '../components/PrivacyPolicyModal';
 
 
 
@@ -34,7 +35,7 @@ const DonatePage = () => {
   const [donorAddress, setDonorAddress] = useState<string>('');
   const [donorPAN, setDonorPAN] = useState<string>('');
   const [donationType, setDonationType] = useState<string>('general');
-  const [wantsTaxBenefit, setWantsTaxBenefit] = useState<boolean>(false);
+  const [wantsTaxBenefit, setWantsTaxBenefit] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [razorpayKey, setRazorpayKey] = useState<string>('');
   const [donationSuccess, setDonationSuccess] = useState<{
@@ -42,6 +43,8 @@ const DonatePage = () => {
     receiptNumber?: string;
     amount?: number;
   }>({ show: false });
+  const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState<boolean>(false);
+  const [privacyPolicyAccepted, setPrivacyPolicyAccepted] = useState<boolean>(false);
 
   const apiUri = import.meta.env.VITE_API_URI;
 
@@ -205,7 +208,7 @@ const DonatePage = () => {
               setDonorAddress('');
               setDonorPAN('');
               setDonationType('general');
-              setWantsTaxBenefit(false);
+              setWantsTaxBenefit(true);
             } else {
               alert('Payment verification failed. Please contact support.');
             }
@@ -430,24 +433,6 @@ const DonatePage = () => {
                   required
                 />
               </div>
-              
-              {/* Tax Benefit Section */}
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
-                <label className="flex items-center space-x-3 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={wantsTaxBenefit}
-                    onChange={(e) => setWantsTaxBenefit(e.target.checked)}
-                    className="w-4 h-4 text-primary-600"
-                  />
-                  <div>
-                    <span className="font-medium">I want tax exemption under Section 80G</span>
-                    <p className="text-sm text-gray-600">
-                      Provides tax deduction benefits. Requires additional information.
-                    </p>
-                  </div>
-                </label>
-              </div>
 
               {wantsTaxBenefit && (
                 <motion.div
@@ -482,10 +467,36 @@ const DonatePage = () => {
               )}
             </div>
 
+            {/* Privacy Policy Agreement */}
+            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-6">
+              <label className="flex items-start space-x-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={privacyPolicyAccepted}
+                  onChange={(e) => setPrivacyPolicyAccepted(e.target.checked)}
+                  className="w-4 h-4 text-primary-600 mt-1"
+                  required
+                />
+                <div className="text-sm">
+                  <span className="text-gray-700">
+                    I agree to the{' '}
+                    <button
+                      type="button"
+                      onClick={() => setIsPrivacyModalOpen(true)}
+                      className="text-primary-600 hover:text-primary-800 underline font-medium"
+                    >
+                      Terms of Service & Privacy Policy
+                    </button>
+                    {' '}and understand that my personal information will be used to process this donation and issue receipts.
+                  </span>
+                </div>
+              </label>
+            </div>
+
             {/* Donate Button */}
             <Button
               onClick={handleDonate}
-              disabled={isLoading || !amount || !donorName || !donorEmail}
+              disabled={isLoading || !amount || !donorName || !donorEmail || !privacyPolicyAccepted}
               className="w-full text-lg py-4 flex items-center justify-center space-x-2"
             >
               <CreditCard className="w-5 h-5" />
@@ -501,6 +512,12 @@ const DonatePage = () => {
           </Card>
         </div>
       </div>
+
+      {/* Privacy Policy Modal */}
+      <PrivacyPolicyModal
+        isOpen={isPrivacyModalOpen}
+        onClose={() => setIsPrivacyModalOpen(false)}
+      />
     </div>
   );
 };

@@ -1,7 +1,10 @@
 import { Heart, Mail, MapPin, Phone } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import PrivacyPolicyModal from './PrivacyPolicyModal';
 
 const Footer = () => {
+  const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(false);
   return (
     <footer className="bg-primary-900 text-white pt-12 pb-6">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -95,22 +98,21 @@ const Footer = () => {
             &copy; {new Date().getFullYear()} We Can Trust. All rights reserved.
           </p>
           <div className="mt-4 md:mt-0">
-            <a 
-              href="#" 
-              className="text-sm text-gray-400 hover:text-accent-400 transition-colors duration-200"
+            <button 
+              onClick={() => setIsPrivacyModalOpen(true)}
+              className="text-sm text-gray-400 hover:text-accent-400 transition-colors duration-200 underline-offset-2 hover:underline"
             >
-              Privacy Policy
-            </a>
-            <span className="mx-2 text-gray-600">|</span>
-            <a 
-              href="#" 
-              className="text-sm text-gray-400 hover:text-accent-400 transition-colors duration-200"
-            >
-              Terms of Service
-            </a>
+              Privacy Policy <span className="text-gray-600">&</span> Terms of Service
+            </button>
           </div>
         </div>
       </div>
+      
+      {/* Privacy Policy Modal */}
+      <PrivacyPolicyModal 
+        isOpen={isPrivacyModalOpen} 
+        onClose={() => setIsPrivacyModalOpen(false)} 
+      />
     </footer>
   );
 };

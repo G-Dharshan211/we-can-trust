@@ -99,8 +99,8 @@ class ReceiptGenerator {
             * { margin: 0; padding: 0; box-sizing: border-box; }
             body { 
                 font-family: 'Arial', sans-serif; 
-                font-size: 12px;
-                line-height: 1.6; 
+                font-size: 10px;
+                line-height: 1.3; 
                 color: #333;
                 background: white;
             }
@@ -344,7 +344,7 @@ class ReceiptGenerator {
   }
 
   // Generate PDF receipt
-  async generateReceipt(donation, baseUrl = 'http://localhost:8000') {
+  async generateReceipt(donation, baseUrl) {
     try {
       // Generate verification hash
       const verificationHash = this.generateReceiptHash(donation);
