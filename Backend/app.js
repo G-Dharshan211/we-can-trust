@@ -303,7 +303,7 @@ app.post("/api/donations/verify-payment", async (req, res) => {
 // Async function to generate and send receipt
 async function generateReceiptAsync(donation, host) {
   try {
-    const baseUrl = `http://${host}`;
+    const baseUrl = process.env.VITE_API_URI;
     
     // Generate receipt PDF
     const receiptResult = await receiptGenerator.generateReceipt(donation, baseUrl);
@@ -313,7 +313,7 @@ async function generateReceiptAsync(donation, host) {
       await Donation.findByIdAndUpdate(donation._id, {
         receiptGenerated: true,
         receiptGeneratedAt: new Date(),
-        receiptPath: receiptResult.filePath,
+        receiptPath: receiptResubaseUrllt.filePath,
         receiptHash: receiptResult.verificationHash
       });
 
@@ -523,7 +523,7 @@ app.post("/api/receipts/regenerate/:donationId", async (req, res) => {
       });
     }
     
-    const baseUrl = `http://${req.get('host')}`;
+    const baseUrl = process.env.VITE_API_URI;
     
     // Generate new receipt
     const receiptResult = await receiptGenerator.generateReceipt(donation, baseUrl);
