@@ -4,6 +4,7 @@
   "description": "we-can-trust",
   "main": "app.js",
   "scripts": {
+    "postinstall": "npx puppeteer browsers install chrome",
     "start": "node app.js",
     "test": "nodemon app.js"
   },
