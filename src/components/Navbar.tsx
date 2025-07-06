@@ -133,6 +133,9 @@ const Navbar = () => {
               >
                 Contact
               </NavLink>
+              <NavLink to="/verify-receipt" className={navLinkClass(true, true)} >
+                Verify Receipt
+              </NavLink>
               <div className="pt-2 mt-2 border-t border-gray-200">
                 <NavLink 
                   to="/donate" 
