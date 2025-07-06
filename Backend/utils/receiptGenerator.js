@@ -1,7 +1,6 @@
-const puppeteer = require('puppeteer');
+const htmlPdf = require('html-pdf-node');
 const QRCode = require('qrcode');
 const crypto = require('crypto');
-const CryptoJS = require('crypto-js');
 const path = require('path');
 const fs = require('fs').promises;
 
@@ -103,11 +102,13 @@ class ReceiptGenerator {
                 line-height: 1.3; 
                 color: #333;
                 background: white;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
             }
             .receipt-container {
                 max-width: 800px;
-                margin: 10px auto;
-                padding: 40px;
+                margin: 0 auto;
+                padding: 30px;
                 background: white;
                 border: 2px solid #0066cc;
                 page-break-inside: avoid;
@@ -118,51 +119,47 @@ class ReceiptGenerator {
                 padding-bottom: 20px;
                 margin-bottom: 30px;
             }
-            .logo {
-                width: 80px;
-                height: 80px;
-                margin: 0 auto 15px;
-            }
             .org-name {
-                font-size: 22px;
+                font-size: 24px;
                 font-weight: bold;
                 color: #0066cc;
-                margin-bottom: 5px;
+                margin-bottom: 8px;
             }
             .org-details {
-                font-size: 12px;
+                font-size: 13px;
                 color: #666;
-                line-height: 1.4;
+                line-height: 1.5;
             }
             .receipt-title {
                 text-align: center;
-                font-size: 20px;
+                font-size: 22px;
                 font-weight: bold;
                 color: #0066cc;
-                margin: 20px 0;
+                margin: 25px 0;
                 text-transform: uppercase;
                 letter-spacing: 1px;
             }
             .receipt-info {
                 display: flex;
                 justify-content: space-between;
-                margin-bottom: 20px;
+                margin-bottom: 25px;
                 background: #f8f9fa;
-                padding: 10px;
+                padding: 15px;
                 border-radius: 5px;
             }
             .receipt-number {
                 font-weight: bold;
                 color: #0066cc;
+                font-size: 14px;
             }
             .donation-details {
                 margin-bottom: 30px;
             }
             .detail-row {
                 display: flex;
-                margin-bottom: 8px;
+                margin-bottom: 10px;
                 border-bottom: 1px dotted #ccc;
-                padding-bottom: 5px;
+                padding-bottom: 6px;
             }
             .detail-label {
                 width: 200px;
@@ -175,47 +172,48 @@ class ReceiptGenerator {
             }
             .amount-section {
                 background: #e3f2fd;
-                padding: 20px;
+                padding: 25px;
                 border-radius: 8px;
-                margin: 20px 0;
+                margin: 25px 0;
                 border-left: 5px solid #0066cc;
+                text-align: center;
             }
             .amount-value {
-                font-size: 28px;
+                font-size: 32px;
                 font-weight: bold;
                 color: #0066cc;
-                margin-bottom: 5px;
+                margin-bottom: 8px;
             }
             .amount-words {
                 font-style: italic;
                 color: #666;
-                font-size: 14px;
+                font-size: 16px;
             }
             .tax-exemption {
                 background: #fff3cd;
-                border: 1px solid #ffeaa7;
-                padding: 15px;
+                border: 2px solid #ffeaa7;
+                padding: 20px;
                 border-radius: 5px;
-                margin: 20px 0;
+                margin: 25px 0;
             }
             .footer {
                 display: flex;
                 justify-content: space-between;
                 align-items: flex-end;
                 margin-top: 40px;
-                padding-top: 20px;
+                padding-top: 25px;
                 border-top: 2px solid #0066cc;
             }
             .qr-section {
                 text-align: center;
             }
             .qr-code {
-                width: 100px;
-                height: 100px;
-                margin-bottom: 5px;
+                width: 120px;
+                height: 120px;
+                margin-bottom: 8px;
             }
             .verification-text {
-                font-size: 10px;
+                font-size: 11px;
                 color: #666;
             }
             .signature-section {
@@ -224,16 +222,17 @@ class ReceiptGenerator {
             .signature-line {
                 border-top: 1px solid #333;
                 width: 200px;
-                margin: 40px auto 5px;
-                padding-top: 5px;
+                margin: 40px auto 8px;
+                padding-top: 8px;
+                font-weight: bold;
             }
             .watermark {
-                position: absolute;
+                position: fixed;
                 top: 50%;
                 left: 50%;
                 transform: translate(-50%, -50%) rotate(-45deg);
-                font-size: 90px;
-                color: rgba(0, 102, 204, 0.05);
+                font-size: 120px;
+                color: rgba(0, 102, 204, 0.03);
                 font-weight: bold;
                 z-index: 0;
                 pointer-events: none;
@@ -241,6 +240,19 @@ class ReceiptGenerator {
             .content {
                 position: relative;
                 z-index: 1;
+            }
+            @media print {
+                .receipt-container {
+                    border: 2px solid #0066cc;
+                    background: white;
+                }
+                .amount-section {
+                    background: #e3f2fd !important;
+                }
+                .tax-exemption {
+                    background: #fff3cd !important;
+                    border: 2px solid #ffeaa7 !important;
+                }
             }
         </style>
     </head>
@@ -358,21 +370,8 @@ class ReceiptGenerator {
       // Generate HTML
       const html = this.generateReceiptHTML(donation, qrCodeDataUrl, verificationHash);
       
-      // Generate PDF using Puppeteer
-      const browser = await puppeteer.launch({
-        headless: 'new',
-        args: ['--no-sandbox', '--disable-setuid-sandbox']
-      });
-      
-      const page = await browser.newPage();
-      await page.setContent(html, { 
-        waitUntil: 'networkidle0',
-        timeout: 30000 
-      });
-      
-      const fileName = `receipt-${donation.receiptNumber}.pdf`;
-      
-      const pdfBuffer = await page.pdf({
+      // Configure html-pdf-node options
+      const options = {
         format: 'A4',
         printBackground: true,
         margin: {
@@ -380,10 +379,17 @@ class ReceiptGenerator {
           right: '0.5in',
           bottom: '0.5in',
           left: '0.5in'
-        }
-      });
+        },
+        displayHeaderFooter: false,
+        preferCSSPageSize: true
+      };
+
+      const file = { content: html };
       
-      await browser.close();
+      // Generate PDF using html-pdf-node
+      const pdfBuffer = await htmlPdf.generatePdf(file, options);
+      
+      const fileName = `receipt-${donation.receiptNumber}.pdf`;
       
       return {
         success: true,
