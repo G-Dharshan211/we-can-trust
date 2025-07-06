@@ -79,6 +79,9 @@ const Navbar = () => {
             <NavLink to="/contact" className={navLinkClass(isScrolled)}>
               Contact
             </NavLink>
+            <NavLink to="/verify-receipt" className={navLinkClass(isScrolled)}>
+              Verify Receipt
+            </NavLink>
             <NavLink 
               to="/donate" 
               className="ml-4 px-6 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-md transition-all duration-200 font-semibold shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
