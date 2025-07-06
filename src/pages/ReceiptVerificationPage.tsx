@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Search, CheckCircle, XCircle, FileText, Download } from 'lucide-react';
 import Button from '../components/Button';
 import Card from '../components/Card';
+import { Heart } from 'lucide-react';
 import { useEffect } from 'react';
 
 
@@ -97,6 +98,67 @@ const ReceiptVerificationPage = () => {
   };
 
   return (
+    <div className="pb-16">
+      {/* Creative Header */}
+      <div className="bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 py-40 relative overflow-hidden">
+    <div className="absolute inset-0 z-0">
+      {/* Animated blurred gradient background with amber blobs */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div
+          className="absolute inset-0 w-full h-full"
+            style={{
+            backgroundImage: 
+              'radial-gradient(circle at 20% 30%, rgba(255, 235, 59, 0.7) 0%, transparent 50%), ' +
+              'radial-gradient(circle at 80% 50%, rgba(76, 175, 80, 0.6) 0%, transparent 50%), ' +
+              'radial-gradient(circle at 50% 80%, rgba(255, 152, 0, 0.5) 0%, transparent 50%)',
+            backgroundSize: '200% 200%',
+            animation: 'animatedGradient 16s ease-in-out infinite',
+            filter: 'blur(60px)',
+            opacity: 0.7,
+          }}
+        />
+      </div>
+
+      {/* Optional: Decorative grid pattern on top */}
+      <div className="absolute inset-0 opacity-10 pointer-events-none">
+        <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <defs>
+            <pattern id="grid-hero" width="8" height="8" patternUnits="userSpaceOnUse">
+              <path d="M 8 0 L 0 0 0 8" fill="none" stroke="currentColor" strokeWidth="0.3" />
+              <circle cx="0" cy="0" r="0.5" fill="currentColor" opacity="0.3" />
+            </pattern>
+            <linearGradient id="gridGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="white" stopOpacity="0.8" />
+              <stop offset="50%" stopColor="white" stopOpacity="0.4" />
+              <stop offset="100%" stopColor="white" stopOpacity="0.1" />
+            </linearGradient>
+          </defs>
+          <rect width="100" height="100" fill="url(#grid-hero)" stroke="url(#gridGradient)" />
+        </svg>
+      </div>
+    </div>
+
+        
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="max-w-4xl mx-auto text-center">
+            <motion.div
+              initial={{ opacity: 0, y: -30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              <h1 className="text-5xl md:text-7xl font-display font-bold text-white mb-6 leading-tight">
+               
+                 Receipt  <span className="text-accent-400">Verification</span>
+              </h1>
+              <p className="px-2 sm:px-0 text-xl md:text-2xl text-primary-100 max-w-3xl mx-auto leading-relaxed">
+        Verify the authenticity of your donation receipt
+              </p>
+               
+            </motion.div>
+          </div>
+          
+        </div>
+      </div>
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12">
       <div className="container mx-auto px-6">
         <div className="max-w-2xl mx-auto">
@@ -105,13 +167,7 @@ const ReceiptVerificationPage = () => {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-8"
           >
-            <FileText className="w-16 h-16 text-primary-600 mx-auto mb-4" />
-            <h1 className="text-4xl font-bold text-gray-800 mb-4">
-              Receipt Verification
-            </h1>
-            <p className="text-lg text-gray-600">
-              Verify the authenticity of your donation receipt
-            </p>
+            
           </motion.div>
 
           <Card className="p-8 mb-8">
@@ -297,6 +353,7 @@ const ReceiptVerificationPage = () => {
           </Card>
         </div>
       </div>
+    </div>
     </div>
   );
 };
