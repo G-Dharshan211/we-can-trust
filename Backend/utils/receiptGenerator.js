@@ -1,8 +1,6 @@
 const htmlPdf = require('html-pdf-node');
 const QRCode = require('qrcode');
 const crypto = require('crypto');
-const path = require('path');
-const fs = require('fs').promises;
 
 class ReceiptGenerator {
   constructor() {
@@ -99,7 +97,7 @@ class ReceiptGenerator {
             body { 
                 font-family: 'Arial', sans-serif; 
                 font-size: 10px;
-                line-height: 1.3; 
+                line-height: 1.0; 
                 color: #333;
                 background: white;
                 -webkit-print-color-adjust: exact;

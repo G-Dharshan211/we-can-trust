@@ -275,7 +275,7 @@ app.post("/api/donations/verify-payment", async (req, res) => {
 
       if (donation) {
         // Generate receipt in background
-        generateReceiptAsync(donation, req.get('host'));
+        generateReceiptAsync(donation, process.env.VRI_API_URI || `http://${req.get('host')}`);
       }
 
       res.json({ 
@@ -303,24 +303,23 @@ app.post("/api/donations/verify-payment", async (req, res) => {
 // Async function to generate and send receipt
 async function generateReceiptAsync(donation, host) {
   try {
-    const baseUrl = `http://${host}`;
+    const baseUrl = host;
     
-    // Generate receipt PDF
+    // Generate receipt PDF (single generation)
     const receiptResult = await receiptGenerator.generateReceipt(donation, baseUrl);
     
     if (receiptResult.success) {
-      // Update donation with receipt information
+      // Update donation with receipt information (no file path needed)
       await Donation.findByIdAndUpdate(donation._id, {
         receiptGenerated: true,
         receiptGeneratedAt: new Date(),
-        receiptPath: receiptResult.filePath,
         receiptHash: receiptResult.verificationHash
       });
 
-      // Send receipt via email
+      // Send receipt via email using buffer directly
       const emailResult = await emailService.sendReceiptEmail(
         donation, 
-        receiptResult.filePath, 
+        receiptResult.buffer, 
         receiptGenerator.organizationDetails
       );
 
@@ -426,14 +425,14 @@ app.get("/api/receipts/download/:receiptNumber", async (req, res) => {
       });
     }
     
-    // Check if file exists
-    const result = await receiptGenerator.generateReceipt(donation, `http://${req.get('host')}`);
+    // Generate receipt PDF on-demand
+    const result = await receiptGenerator.generateReceipt(donation, process.env.VRI_API_URI || `http://${req.get('host')}`);
     if (!result.success) {
-      console.error("Receipt gen failed:", result.error);
+      console.error("Receipt generation failed:", result.error);
       return res.status(500).json({ success: false, message: "Failed to generate receipt" });
     }
 
-    // Stream it down
+    // Send PDF buffer directly
     res
       .status(200)
       .set({
@@ -523,17 +522,16 @@ app.post("/api/receipts/regenerate/:donationId", async (req, res) => {
       });
     }
     
-    const baseUrl = `http://${req.get('host')}`;
+    const baseUrl = process.env.VITE_API_URI || `http://${req.get('host')}`;
     
     // Generate new receipt
     const receiptResult = await receiptGenerator.generateReceipt(donation, baseUrl);
     
     if (receiptResult.success) {
-      // Update donation with new receipt information
+      // Update donation with new receipt information (no file path)
       await Donation.findByIdAndUpdate(donation._id, {
         receiptGenerated: true,
         receiptGeneratedAt: new Date(),
-        receiptPath: receiptResult.filePath,
         receiptHash: receiptResult.verificationHash
       });
 
@@ -541,7 +539,7 @@ app.post("/api/receipts/regenerate/:donationId", async (req, res) => {
       if (req.body.sendEmail) {
         const emailResult = await emailService.sendReceiptEmail(
           donation, 
-          receiptResult.filePath, 
+          receiptResult.buffer, 
           receiptGenerator.organizationDetails
         );
         

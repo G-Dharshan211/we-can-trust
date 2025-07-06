@@ -195,8 +195,8 @@ class EmailService {
     `;
   }
 
-  // Send receipt email with PDF attachment
-  async sendReceiptEmail(donation, receiptPath, organizationDetails) {
+  // Send receipt email with PDF buffer attachment
+  async sendReceiptEmail(donation, pdfBuffer, organizationDetails) {
     try {
       const emailHTML = this.generateReceiptEmailHTML(donation, organizationDetails);
       
@@ -211,7 +211,7 @@ class EmailService {
         attachments: [
           {
             filename: `Receipt-${donation.receiptNumber}.pdf`,
-            path: receiptPath,
+            content: pdfBuffer,
             contentType: 'application/pdf'
           }
         ]
