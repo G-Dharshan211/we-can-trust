@@ -5,10 +5,6 @@ import Button from '../components/Button';
 import Card from '../components/Card';
 import PrivacyPolicyModal from '../components/PrivacyPolicyModal';
 
-
-
-
-
 // Razorpay types
 declare global {
   interface Window {
@@ -244,14 +240,23 @@ const DonatePage = () => {
     }
   };
 
-  if (donationSuccess.show) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center p-4">
+  return (
+    <div className="pb-16">
+      {/*Receipt Download*/}
+
+      {donationSuccess.show && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full text-center"
+          className="relative bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full text-center"
         >
+            <button 
+              onClick={() => setDonationSuccess({show:false})}
+              className="absolute top-2 right-3 text-gray-500 hover:text-gray-700 focus:outline-none text-2xl"
+            >
+              &times;
+            </button>
           <div className="mb-6">
             <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
             <h2 className="text-2xl font-bold text-gray-800 mb-2">Thank You!</h2>
@@ -294,11 +299,8 @@ const DonatePage = () => {
           </div>
         </motion.div>
       </div>
-    );
-  }
+      )}
 
-  return (
-    <div className="pb-16">
       {/* Creative Header */}
       <div className="bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 py-40 relative overflow-hidden">
         <div className="absolute inset-0 z-0">
