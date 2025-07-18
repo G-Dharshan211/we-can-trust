@@ -27,18 +27,18 @@ const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({ isOpen, onClose
         {/* Scrollable Content */}
         <div className="flex-1 overflow-y-auto p-6">
           <div className="prose prose-sm max-w-none">
-            <p className="text-gray-700 leading-relaxed mb-6">
-              We Can Trust is a certified non-profit (NGO) in Tiruvannamalai, Tamil Nadu, India. We accept both one-time 
-              and recurring (monthly) donations via our official .org website. All contributions are securely processed 
-              through recognized gateways, and donors are provided clear information about how their data will be used 
-              and protected. Our policies below explain what personal information we collect (name, email, phone, payment details), 
+            <p className="text-gray-700 leading-relaxed text-justify mb-6">
+              <strong>We Can Trust</strong> is a certified non-profit (NGO) in Tiruvannamalai, Tamil Nadu, India. We accept both one-time
+              and recurring (monthly) donations via our official .org website. All contributions are securely processed
+              through recognized gateways, and donors are provided clear information about how their data will be used
+              and protected. Our policies below explain what personal information we collect (name, email, phone, payment details),
               how we use it (to process donations and issue receipts), and the rules governing your use of our website.
             </p>
 
             <h3 className="text-xl font-semibold text-gray-900 mb-4">Privacy Policy</h3>
             
             <h4 className="text-lg font-semibold text-gray-800 mb-3">Data Collection and Use</h4>
-            <p className="text-gray-700 leading-relaxed mb-4">
+            <p className="text-gray-700 leading-relaxed text-justify mb-4">
               We collect personal data only when you donate or contact us. This includes your name, email address, 
               phone number, and payment details (for donation processing). We use this information solely to process 
               your donation and issue receipts, and to communicate donation updates or reports if you consent. In 
@@ -49,7 +49,7 @@ const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({ isOpen, onClose
             </p>
 
             <h4 className="text-lg font-semibold text-gray-800 mb-3">Payment Processing & Security</h4>
-            <p className="text-gray-700 leading-relaxed mb-4">
+            <p className="text-gray-700 leading-relaxed text-justify mb-4">
               All donations on our site are processed via Razorpay, a PCI-DSS Level 1 compliant payment gateway. 
               Razorpay handles credit/debit card transactions and encrypts all payment data (using SSL/TLS and 
               industry-standard encryption). Neither Razorpay nor We Can Trust ever store your raw card details on 
@@ -61,7 +61,7 @@ const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({ isOpen, onClose
             </p>
 
             <h4 className="text-lg font-semibold text-gray-800 mb-3">Third-Party Sharing and Data Rights</h4>
-            <p className="text-gray-700 leading-relaxed mb-4">
+            <p className="text-gray-700 leading-relaxed text-justify mb-4">
               We never sell or rent your personal data. We share your information only with trusted third parties 
               essential to our services (for instance, Razorpay for payment processing) and only to the extent needed 
               for them to perform their function. Those service providers are obligated to protect your data according 
@@ -74,14 +74,14 @@ const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({ isOpen, onClose
             </p>
 
             <h4 className="text-lg font-semibold text-gray-800 mb-3">Cookies and Tracking</h4>
-            <p className="text-gray-700 leading-relaxed mb-4">
+            <p className="text-gray-700 leading-relaxed text-justify mb-4">
               We do not use any cookies or tracking pixels on our website. Our site is designed for simplicity and 
               privacy: visitors can browse and donate without any cookie-based tracking or pop-ups. (All necessary 
               functionality works without storing any cookie data.)
             </p>
 
             <h4 className="text-lg font-semibold text-gray-800 mb-3">Policy Updates</h4>
-            <p className="text-gray-700 leading-relaxed mb-6">
+            <p className="text-gray-700 leading-relaxed text-justify mb-6">
               We may update this Privacy Policy from time to time. Any changes will be posted on our website with an 
               updated "Last Updated" date. Your continued use of our services after changes indicates acceptance of 
               the new policy.
@@ -89,7 +89,7 @@ const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({ isOpen, onClose
 
             <h3 className="text-xl font-semibold text-gray-900 mb-4">Terms of Use</h3>
             
-            <ul className="space-y-4 text-gray-700">
+            <ul className="space-y-4 text-justify text-gray-700">
               <li>
                 <strong>Donations:</strong> All gifts on this site are voluntary contributions to We Can Trust for 
                 charitable purposes. Donations are generally non-refundable, as funds are used immediately for our 
@@ -129,7 +129,7 @@ const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({ isOpen, onClose
               <p className="text-sm text-gray-600">
                 <strong>Last Updated:</strong> {new Date().toLocaleDateString()}
               </p>
-              <p className="text-sm text-gray-600 mt-2">
+              <p className="text-sm text-justify text-gray-600 mt-2">
                 This documentation is based on standard NGO donation practices and Indian data protection guidelines, 
                 including secure PCI-compliant payment processing and legal rights for data principals.
               </p>
