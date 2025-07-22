@@ -22,8 +22,17 @@ import { useEffect } from 'react';
 
 const HomePage = () => {
 
-
+    const apiUri = import.meta.env.VITE_API_URI;
     useEffect(() => {
+    const HealthCheck = async() => {
+      try {
+        const res = await fetch(`${apiUri}/api/health`);
+        console.log(res.json());
+      } catch(erro) {
+        console.error(error);
+      }
+    };
+    HealthCheck();
     window.scrollTo(0, 0);
   }, []);
 
