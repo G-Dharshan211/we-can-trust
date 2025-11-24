@@ -174,7 +174,7 @@ const ContactPage = () => {
                   <ContactInfo 
                     icon={<Mail size={24} />} 
                     title="Email Address" 
-                    content={<>mercysocialtrust@gmail.com<br /></>} 
+                    content={<>wecantrust98@gmail.com<br /></>} 
                   />
                   
                   <ContactInfo 
